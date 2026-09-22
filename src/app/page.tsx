@@ -28,7 +28,7 @@ export default async function HomePage() {
       .order("position"),
     supabase
       .from("exercises")
-      .select("id, workout_id, name, load_note, done, position")
+      .select("id, workout_id, name, hint, load_note, done, position")
       .is("archived_at", null)
       .order("position"),
   ]);

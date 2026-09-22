@@ -11,7 +11,8 @@ experimentos em schemas separados.
 - Quatro cards de treino (Upper A, Lower A, Upper B, Lower B), cada um com seus exercícios.
 - A barra de progresso conta **treinos completos**: um treino só conta quando
   todos os exercícios dele estão marcados.
-- O campo de carga (`50 / 3x10`) é uma propriedade do exercício, não da semana.
+- O campo de registro é uma propriedade do exercício, não da semana. A sugestão
+  vem da coluna `hint`: musculação anota `carga x reps`, cardio anota tempo.
   **Resetar a semana não apaga carga.**
 - `Resetar semana` arquiva o estado atual em `week_history` (com snapshot em JSONB),
   zera os checks e incrementa o contador da semana.
@@ -66,7 +67,7 @@ select w.user_id, w.id, 'Crucifixo inclinado',
 -- tirar um exercício sem perder o histórico
 update workout_tracker.exercises
    set archived_at = now()
- where name = 'Cardio 15 min';
+ where name = 'Cardio';
 ```
 
 Como o app lê tudo do banco, uma tela de CRUD é um acréscimo — não um refactor.

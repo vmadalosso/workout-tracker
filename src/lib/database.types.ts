@@ -42,6 +42,7 @@ export type Database = {
           user_id: string;
           workout_id: string;
           name: string;
+          hint: string;
           load_note: string;
           done: boolean;
           position: number;
@@ -54,6 +55,7 @@ export type Database = {
           user_id: string;
           workout_id: string;
           name: string;
+          hint?: string;
           load_note?: string;
           done?: boolean;
           position?: number;
@@ -61,6 +63,7 @@ export type Database = {
         };
         Update: {
           name?: string;
+          hint?: string;
           load_note?: string;
           done?: boolean;
           position?: number;
@@ -123,5 +126,5 @@ export type WorkoutCard = Pick<
   WorkoutRow,
   "id" | "slug" | "title" | "day_label" | "position"
 > & {
-  exercises: Pick<ExerciseRow, "id" | "name" | "load_note" | "done" | "position">[];
+  exercises: Pick<ExerciseRow, "id" | "name" | "hint" | "load_note" | "done" | "position">[];
 };

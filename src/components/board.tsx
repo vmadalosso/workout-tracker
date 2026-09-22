@@ -260,8 +260,8 @@ export function Board({
                       <input
                         value={exercise.load_note}
                         onChange={(event) => changeLoad(exercise.id, event.target.value)}
-                        placeholder="carga x reps"
-                        aria-label={`Carga de ${exercise.name}`}
+                        placeholder={exercise.hint}
+                        aria-label={`${exercise.name} (${exercise.hint})`}
                         className="border-line bg-surface-2 text-ink placeholder:text-muted/50 focus:border-accent h-9 w-24 shrink-0 rounded-lg border px-2 text-center text-xs outline-none"
                       />
                     </li>
