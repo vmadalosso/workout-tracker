@@ -4,9 +4,10 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CircleAlert, LogOut, RotateCcw, Trophy, X } from "lucide-react";
 
+import { WeightCard } from "@/components/weight-card";
 import { WorkoutCard as WorkoutCardView } from "@/components/workout-card";
 import { createClient } from "@/lib/supabase/client";
-import type { WorkoutCard } from "@/lib/database.types";
+import type { ProfileRow, WeightEntry, WorkoutCard } from "@/lib/database.types";
 
 /** Quanto esperar depois da última tecla antes de gravar a carga. */
 const SAVE_DELAY_MS = 600;
@@ -18,11 +19,17 @@ function isDone(workout: WorkoutCard) {
 }
 
 export function Board({
+  userId,
   initialWeek,
   initialWorkouts,
+  profile,
+  initialWeights,
 }: {
+  userId: string;
   initialWeek: number;
   initialWorkouts: WorkoutCard[];
+  profile: ProfileRow | null;
+  initialWeights: WeightEntry[];
 }) {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -176,7 +183,7 @@ export function Board({
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted text-[11px] tracking-[0.2em] uppercase">Semana</p>
-            <p className="text-ink tabular text-4xl leading-none font-semibold tracking-tight sm:text-5xl">
+            <p className="text-ink text-4xl leading-none font-semibold tracking-tight sm:text-5xl">
               {week}
             </p>
           </div>
@@ -238,6 +245,16 @@ export function Board({
             />
           ))}
         </section>
+      )}
+
+      {total > 0 && (
+        <WeightCard
+          userId={userId}
+          week={week}
+          profile={profile}
+          initialEntries={initialWeights}
+          onError={setError}
+        />
       )}
 
       <div className="mt-8 flex justify-center">

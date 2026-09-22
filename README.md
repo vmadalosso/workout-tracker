@@ -41,6 +41,29 @@ Decisões pensadas para uso no celular dentro da academia:
 - Coluna única em qualquer largura: com um card aberto por vez, duas colunas só
   deixavam um vazio ao lado do card aberto.
 
+## Gráfico de peso
+
+`recharts`. A linha é o Pink do Dracula (`#ff79c6`) e a faixa de meta é o Green
+(`#50fa7b`), escolhidos por validação de contraste sob daltonismo, não por gosto:
+
+| Linha testada | ΔE vs. banda verde | Veredito |
+|---|---|---|
+| Pink `#ff79c6` | deutan 17.4 · tritan 35.0 | escolhida |
+| Purple `#bd93f9` | deutan 26.7 · tritan 22.4 | ok, mas é o acento da UI |
+| Orange `#ffb86c` | deutan **3.3** | indistinguível da banda |
+| Yellow `#f1fa8c` | protan **3.1** | indistinguível da banda |
+| Cyan `#8be9fd` | croma 0.093 | abaixo do piso, lê como cinza |
+
+Laranja e amarelo pareciam perfeitamente distintos a olho nu. Não eram.
+
+Outras decisões do gráfico: grade sólida (tracejado fica reservado para os
+limites da meta, onde significa "limiar"); sem legenda, porque com série única o
+título já nomeia; com menos de dois pontos não há gráfico, só os números; e existe
+uma tabela equivalente atrás de "ver números", para o valor nunca depender de hover.
+
+Cores no gráfico são hex literais, não `var(--…)`: atributos de apresentação em
+SVG não resolvem custom properties do CSS.
+
 ## Rodando local
 
 ```bash

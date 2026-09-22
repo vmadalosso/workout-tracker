@@ -71,6 +71,44 @@ export type Database = {
         };
         Relationships: [];
       };
+      profile: {
+        Row: {
+          user_id: string;
+          start_weight: number | null;
+          goal_min: number | null;
+          goal_max: number | null;
+          updated_at: Timestamp;
+        };
+        Insert: {
+          user_id: string;
+          start_weight?: number | null;
+          goal_min?: number | null;
+          goal_max?: number | null;
+        };
+        Update: {
+          start_weight?: number | null;
+          goal_min?: number | null;
+          goal_max?: number | null;
+        };
+        Relationships: [];
+      };
+      weight_entries: {
+        Row: {
+          id: string;
+          user_id: string;
+          week_number: number;
+          weight_kg: number;
+          recorded_at: Timestamp;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          week_number: number;
+          weight_kg: number;
+        };
+        Update: { weight_kg?: number };
+        Relationships: [];
+      };
       week_state: {
         Row: { user_id: string; week_number: number; started_at: Timestamp };
         Insert: { user_id: string; week_number?: number; started_at?: Timestamp };
@@ -103,6 +141,8 @@ export type Database = {
     Views: Record<never, never>;
     Functions: {
       bootstrap: { Args: Record<string, never>; Returns: undefined };
+      seed_program: { Args: Record<string, never>; Returns: undefined };
+      seed_profile: { Args: Record<string, never>; Returns: undefined };
       reset_week: { Args: Record<string, never>; Returns: number };
     };
     Enums: Record<never, never>;
@@ -128,3 +168,9 @@ export type WorkoutCard = Pick<
 > & {
   exercises: Pick<ExerciseRow, "id" | "name" | "hint" | "load_note" | "done" | "position">[];
 };
+
+export type ProfileRow = Database["workout_tracker"]["Tables"]["profile"]["Row"];
+export type WeightEntry = Pick<
+  Database["workout_tracker"]["Tables"]["weight_entries"]["Row"],
+  "week_number" | "weight_kg"
+>;

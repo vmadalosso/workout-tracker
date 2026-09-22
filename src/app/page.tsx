@@ -19,7 +19,8 @@ export default async function HomePage() {
   const { error: bootstrapError } = await supabase.rpc("bootstrap");
   if (bootstrapError) return <SetupError message={bootstrapError.message} />;
 
-  const [stateResult, workoutsResult, exercisesResult] = await Promise.all([
+  const [stateResult, workoutsResult, exercisesResult, profileResult, weightsResult] =
+    await Promise.all([
     supabase.from("week_state").select("week_number").eq("user_id", user.id).maybeSingle(),
     supabase
       .from("workouts")
@@ -31,9 +32,23 @@ export default async function HomePage() {
       .select("id, workout_id, name, hint, load_note, done, position")
       .is("archived_at", null)
       .order("position"),
+    supabase
+      .from("profile")
+      .select("user_id, start_weight, goal_min, goal_max, updated_at")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("weight_entries")
+      .select("week_number, weight_kg")
+      .order("week_number"),
   ]);
 
-  const failure = stateResult.error ?? workoutsResult.error ?? exercisesResult.error;
+  const failure =
+    stateResult.error ??
+    workoutsResult.error ??
+    exercisesResult.error ??
+    profileResult.error ??
+    weightsResult.error;
   if (failure) return <SetupError message={failure.message} />;
 
   const byWorkout = new Map<string, WorkoutCard["exercises"]>();
@@ -48,5 +63,13 @@ export default async function HomePage() {
     exercises: byWorkout.get(workout.id) ?? [],
   }));
 
-  return <Board initialWeek={stateResult.data?.week_number ?? 1} initialWorkouts={workouts} />;
+  return (
+    <Board
+      userId={user.id}
+      initialWeek={stateResult.data?.week_number ?? 1}
+      initialWorkouts={workouts}
+      profile={profileResult.data ?? null}
+      initialWeights={weightsResult.data ?? []}
+    />
+  );
 }
