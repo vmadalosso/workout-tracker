@@ -76,7 +76,7 @@ export function WeightCard({
   }
 
   return (
-    <section className="border-line bg-surface mt-3 rounded-2xl border p-3 sm:p-4">
+    <section className="border-line bg-surface mt-6 rounded-2xl border p-3 sm:p-4">
       <h2 className="text-ink flex items-center gap-2 text-lg leading-tight font-semibold tracking-tight">
         <Scale aria-hidden className="text-muted h-4 w-4" />
         Peso

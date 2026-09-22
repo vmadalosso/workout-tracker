@@ -227,12 +227,22 @@ export function Board({
         </div>
       </header>
 
+      {total > 0 && (
+        <WeightCard
+          userId={userId}
+          week={week}
+          profile={profile}
+          initialEntries={initialWeights}
+          onError={setError}
+        />
+      )}
+
       {total === 0 ? (
         <p className="text-muted mt-10 text-sm">
           Nenhum treino cadastrado ainda. Recarregue a página para criar o programa padrão.
         </p>
       ) : (
-        <section className="mt-6 flex flex-col gap-3">
+        <section className="mt-3 flex flex-col gap-3">
           {workouts.map((workout) => (
             <WorkoutCardView
               key={workout.id}
@@ -245,16 +255,6 @@ export function Board({
             />
           ))}
         </section>
-      )}
-
-      {total > 0 && (
-        <WeightCard
-          userId={userId}
-          week={week}
-          profile={profile}
-          initialEntries={initialWeights}
-          onError={setError}
-        />
       )}
 
       <div className="mt-8 flex justify-center">
