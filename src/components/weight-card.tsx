@@ -139,7 +139,7 @@ export function WeightCard({
                   : "ex: 74.5"
               }
               aria-label={`Peso da semana ${week}`}
-              className="border-line bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-11 min-w-0 flex-1 rounded-lg border px-3 text-base outline-none"
+              className="border-control bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-11 min-w-0 flex-1 rounded-lg border px-3 text-base outline-none"
             />
             <button
               type="submit"

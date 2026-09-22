@@ -103,7 +103,7 @@ export function WorkoutCard({
                   autoCorrect="off"
                   spellCheck={false}
                   enterKeyHint="done"
-                  className="border-line bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-10 w-28 shrink-0 rounded-lg border px-2 text-center text-base placeholder:text-xs outline-none"
+                  className="border-control bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-10 w-28 shrink-0 rounded-lg border px-2 text-center text-base placeholder:text-xs outline-none"
                 />
               </li>
             ))}

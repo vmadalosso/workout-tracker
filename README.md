@@ -33,6 +33,18 @@ gradiente, meça de novo** — o fundo mais claro derruba o contraste do texto.
 Ícones: [`lucide-react`](https://lucide.dev). Escolhido no lugar do Phosphor por
 ser mais leve; se quiser os pesos do Phosphor (thin/duotone), a troca é mecânica.
 
+Duas famílias de borda, porque elas têm papéis opostos:
+
+| Token | Uso | Contraste |
+|---|---|---|
+| `--color-line` | divisórias e borda de card — **devem** recuar | ~1.3:1 |
+| `--color-control` | checkbox, botão, input | **3.2–3.8:1** |
+
+Controle precisa de 3:1 pela WCAG 1.4.11. Antes tudo usava `--color-line`, e o
+contorno do checkbox dava **1.29:1** sobre o card — praticamente a mesma cor.
+O conserto foi contraste, não espessura: 1px a 3.8:1 aparece, 2px a 1.3:1
+continua sumindo, só que mais grosso.
+
 Decisões pensadas para uso no celular dentro da academia:
 
 - O alvo de toque de um exercício é a linha inteira, não o quadrado de 28px.

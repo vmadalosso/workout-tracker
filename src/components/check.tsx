@@ -9,7 +9,7 @@ export function CheckBox({ checked, large = false }: { checked: boolean; large?:
       aria-hidden
       className={`grid shrink-0 place-items-center rounded-lg border transition-colors duration-150 ${
         large ? "h-9 w-9" : "h-7 w-7"
-      } ${checked ? "border-accent bg-accent" : "border-line bg-transparent"}`}
+      } ${checked ? "border-accent bg-accent" : "border-control bg-transparent"}`}
     >
       <Check
         strokeWidth={3.5}

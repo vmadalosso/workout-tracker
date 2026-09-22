@@ -190,7 +190,7 @@ export function Board({
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="border-line text-muted hover:text-ink hover:border-muted flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs transition-colors"
+              className="border-control bg-surface text-muted hover:text-ink hover:border-muted flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs transition-colors"
             >
               <LogOut aria-hidden className="h-3.5 w-3.5" />
               Sair
@@ -267,7 +267,7 @@ export function Board({
               <button
                 type="button"
                 onClick={() => setConfirmingReset(false)}
-                className="border-line text-muted hover:text-ink h-10 flex-1 rounded-xl border px-4 text-sm sm:flex-none"
+                className="border-control bg-surface text-muted hover:text-ink h-10 flex-1 rounded-xl border px-4 text-sm sm:flex-none"
               >
                 Cancelar
               </button>
@@ -285,7 +285,7 @@ export function Board({
             type="button"
             onClick={() => setConfirmingReset(true)}
             disabled={isResetting}
-            className="border-line text-muted hover:text-ink hover:border-muted flex h-11 items-center gap-2 rounded-xl border px-6 text-sm transition-colors disabled:opacity-60"
+            className="border-control bg-surface text-muted hover:text-ink hover:border-muted flex h-11 items-center gap-2 rounded-xl border px-6 text-sm transition-colors disabled:opacity-60"
           >
             <RotateCcw
               aria-hidden

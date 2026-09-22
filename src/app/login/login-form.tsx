@@ -68,7 +68,7 @@ export function LoginForm({ next }: { next: string }) {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         placeholder="voce@exemplo.com"
-        className="border-line bg-surface text-ink placeholder:text-muted/60 focus:border-accent h-12 rounded-xl border px-4 text-base outline-none"
+        className="border-control bg-surface text-ink placeholder:text-muted/60 focus:border-accent h-12 rounded-xl border px-4 text-base outline-none"
       />
       <button
         type="submit"
