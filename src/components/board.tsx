@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { CheckBox, CheckButton } from "@/components/check";
+import { WorkoutCard as WorkoutCardView } from "@/components/workout-card";
 import { createClient } from "@/lib/supabase/client";
 import type { WorkoutCard } from "@/lib/database.types";
 
@@ -29,6 +29,12 @@ export function Board({
   const [week, setWeek] = useState(initialWeek);
   const [workouts, setWorkouts] = useState(initialWorkouts);
   const [error, setError] = useState<string | null>(null);
+  // Acordeao: so um card aberto por vez, comecando no primeiro treino que
+  // ainda falta. Na ordem Upper A -> Lower A -> Upper B -> Lower B, isso abre
+  // sozinho no treino da vez sem precisar adivinhar o dia da semana.
+  const [openId, setOpenId] = useState<string | null>(
+    () => initialWorkouts.find((workout) => !isDone(workout))?.id ?? null,
+  );
   const [confirmingReset, setConfirmingReset] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
@@ -157,12 +163,14 @@ export function Board({
 
     setWeek(typeof data === "number" ? data : week + 1);
     patch(() => true, false);
+    // Semana nova volta a abrir no primeiro treino.
+    setOpenId(workouts[0]?.id ?? null);
     setIsResetting(false);
     router.refresh();
   }
 
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-3 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-3 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6">
       <header>
         <div className="flex items-start justify-between">
           <div>
@@ -214,71 +222,18 @@ export function Board({
           Nenhum treino cadastrado ainda. Recarregue a página para criar o programa padrão.
         </p>
       ) : (
-        <section className="mt-6 grid items-start gap-3 md:grid-cols-2 md:gap-4">
-          {workouts.map((workout) => {
-            const workoutDone = isDone(workout);
-
-            return (
-              <article
-                key={workout.id}
-                className={`bg-surface rounded-2xl border p-3 transition-colors sm:p-4 ${
-                  workoutDone ? "border-accent/45" : "border-line"
-                }`}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <h2 className="text-ink truncate text-lg leading-tight font-semibold tracking-tight">
-                      {workout.title}
-                    </h2>
-                    {workout.day_label && (
-                      <p className="text-muted mt-1 text-xs">{workout.day_label}</p>
-                    )}
-                  </div>
-                  <CheckButton
-                    checked={workoutDone}
-                    onToggle={() => void toggleWorkout(workout.id)}
-                    label={`Marcar ${workout.title} inteiro`}
-                  />
-                </div>
-
-                <ul className="divide-line-soft mt-2 divide-y sm:mt-3">
-                  {workout.exercises.map((exercise) => (
-                    <li key={exercise.id} className="flex items-center gap-2">
-                      {/* O alvo de toque é a linha inteira, não só o quadradinho:
-                          na academia o dedo erra um quadrado de 28px. */}
-                      <button
-                        type="button"
-                        role="checkbox"
-                        aria-checked={exercise.done}
-                        onClick={() => void toggleExercise(exercise.id, !exercise.done)}
-                        className="active:bg-bg/40 flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-lg py-1.5 text-left transition-colors"
-                      >
-                        <CheckBox checked={exercise.done} />
-                        <span
-                          className={`flex-1 text-sm leading-snug ${
-                            exercise.done ? "text-muted line-through" : "text-ink"
-                          }`}
-                        >
-                          {exercise.name}
-                        </span>
-                      </button>
-                      <input
-                        value={exercise.load_note}
-                        onChange={(event) => changeLoad(exercise.id, event.target.value)}
-                        placeholder={exercise.hint}
-                        aria-label={`${exercise.name} (${exercise.hint})`}
-                        autoCapitalize="off"
-                        autoCorrect="off"
-                        spellCheck={false}
-                        enterKeyHint="done"
-                        className="border-line bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-10 w-28 shrink-0 rounded-lg border px-2 text-center text-base placeholder:text-xs outline-none"
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </article>
-            );
-          })}
+        <section className="mt-6 flex flex-col gap-3">
+          {workouts.map((workout) => (
+            <WorkoutCardView
+              key={workout.id}
+              workout={workout}
+              open={openId === workout.id}
+              onToggleOpen={() => setOpenId(openId === workout.id ? null : workout.id)}
+              onToggleWorkout={() => void toggleWorkout(workout.id)}
+              onToggleExercise={(exerciseId, next) => void toggleExercise(exerciseId, next)}
+              onChangeLoad={changeLoad}
+            />
+          ))}
         </section>
       )}
 

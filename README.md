@@ -31,8 +31,12 @@ Decisões pensadas para uso no celular dentro da academia:
   a cada foco.
 - `env(safe-area-inset-*)` em cima e embaixo, porque o manifest declara
   `display: standalone` e na tela de início não há barra do navegador protegendo.
-- Duas colunas só a partir de 768px: em 640px elas espremiam o nome do
-  exercício a ~96px, pior do que uma coluna.
+- Os cards são um acordeão: um aberto por vez, abrindo sozinho no primeiro
+  treino ainda não concluído. Na ordem Upper A → Lower A → Upper B → Lower B
+  isso cai no treino da vez sem precisar adivinhar o dia da semana, e o cabeçalho
+  fechado ainda mostra `3/9` para não esconder o andamento.
+- Coluna única em qualquer largura: com um card aberto por vez, duas colunas só
+  deixavam um vazio ao lado do card aberto.
 
 ## Rodando local
 
