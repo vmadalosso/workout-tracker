@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# workout-tracker
 
-## Getting Started
+Acompanhamento semanal de treino. Next.js + Supabase, hospedado na Vercel.
 
-First, run the development server:
+O banco vive no projeto Supabase **`dev-portfolio-db`**, isolado no schema
+**`workout_tracker`** — o mesmo projeto Supabase pode hospedar outros
+experimentos em schemas separados.
+
+## Como funciona
+
+- Quatro cards de treino (Upper A, Lower A, Upper B, Lower B), cada um com seus exercícios.
+- A barra de progresso conta **treinos completos**: um treino só conta quando
+  todos os exercícios dele estão marcados.
+- O campo de carga (`50 / 3x10`) é uma propriedade do exercício, não da semana.
+  **Resetar a semana não apaga carga.**
+- `Resetar semana` arquiva o estado atual em `week_history` (com snapshot em JSONB),
+  zera os checks e incrementa o contador da semana.
+
+## Rodando local
 
 ```bash
+cp .env.example .env.local   # preencha com as chaves do painel
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Banco
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Migrations ficam em `supabase/migrations/` e sobem com a CLI:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+supabase link --project-ref <ref>
+supabase db push
+```
 
-## Learn More
+### Armadilha: o schema precisa ser exposto
 
-To learn more about Next.js, take a look at the following resources:
+Por padrão o PostgREST só serve `public`. Sem este passo **toda** consulta volta
+`PGRST106 Invalid schema`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> Project Settings → API → **Exposed schemas** → adicionar `workout_tracker`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+E como este projeto foi criado com *"Automatically expose new tables"* desligado,
+toda tabela nova precisa de `grant` explícito — as migrations já fazem isso.
 
-## Deploy on Vercel
+## Mudando os treinos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Os treinos e exercícios estão no banco, não no código. Dá para editar por SQL
+enquanto não existe tela de edição:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sql
+-- renomear um exercício
+update workout_tracker.exercises
+   set name = 'Supino reto c/ barra'
+ where name = 'Supino inclinado c/ halteres';
+
+-- adicionar um exercício ao fim de um treino
+insert into workout_tracker.exercises (user_id, workout_id, name, position)
+select w.user_id, w.id, 'Crucifixo inclinado',
+       coalesce(max(e.position), -1) + 1
+  from workout_tracker.workouts w
+  left join workout_tracker.exercises e on e.workout_id = w.id
+ where w.slug = 'upper_a'
+ group by w.user_id, w.id;
+
+-- tirar um exercício sem perder o histórico
+update workout_tracker.exercises
+   set archived_at = now()
+ where name = 'Cardio 15 min';
+```
+
+Como o app lê tudo do banco, uma tela de CRUD é um acréscimo — não um refactor.
+
+## Auth
+
+Magic link por e-mail (Supabase Auth). O app é de uso pessoal: depois do primeiro
+login, desligue o cadastro em **Authentication → Sign In / Providers → Email →
+Allow new users to sign up**. Essa é a trava de verdade — ela é do servidor, não
+do cliente.
+
+RLS está ligada nas quatro tabelas com `user_id = auth.uid()`.
