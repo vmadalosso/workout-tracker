@@ -19,10 +19,16 @@ experimentos em schemas separados.
 
 ## Interface
 
-Paleta [Dracula](https://draculatheme.com/contribute#color-palette). Uma exceção:
-`--color-muted` é o Comment (`#6272a4`) clareado, porque o original rende 2.5:1
-sobre o card — abaixo do mínimo para texto. O Comment original ficou em
-`--color-faint`.
+Paleta [Dracula](https://draculatheme.com/contribute#color-palette). O fundo é uma
+malha de três radiais neon (pink e purple no topo, cyan embaixo), fixa para não
+deslizar com a rolagem.
+
+Uma exceção na paleta: `--color-muted` é o Comment (`#6272a4`) clareado, porque o
+original rende 2.5:1 sobre o card — abaixo do mínimo para texto. Precisou de um
+segundo clareamento quando o gradiente entrou: medindo os pixels renderizados, o
+texto do cabeçalho sobre a área mais forte da malha caía para 4.47:1. Hoje o pior
+ponto dá 4.60:1 (6.7:1 sobre o fundo puro). **Se mexer nas opacidades do
+gradiente, meça de novo** — o fundo mais claro derruba o contraste do texto.
 
 Ícones: [`lucide-react`](https://lucide.dev). Escolhido no lugar do Phosphor por
 ser mais leve; se quiser os pesos do Phosphor (thin/duotone), a troca é mecânica.
