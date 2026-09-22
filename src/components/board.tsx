@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { Check } from "@/components/check";
+import { CheckBox, CheckButton } from "@/components/check";
 import { createClient } from "@/lib/supabase/client";
 import type { WorkoutCard } from "@/lib/database.types";
 
@@ -162,12 +162,12 @@ export function Board({
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 pt-6 pb-20 sm:px-6">
+    <main className="mx-auto w-full max-w-4xl flex-1 px-3 pt-[calc(1.5rem+env(safe-area-inset-top))] pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6">
       <header>
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted text-[11px] tracking-[0.2em] uppercase">Semana</p>
-            <p className="text-ink tabular text-5xl leading-none font-semibold tracking-tight">
+            <p className="text-ink tabular text-4xl leading-none font-semibold tracking-tight sm:text-5xl">
               {week}
             </p>
           </div>
@@ -214,14 +214,14 @@ export function Board({
           Nenhum treino cadastrado ainda. Recarregue a página para criar o programa padrão.
         </p>
       ) : (
-        <section className="mt-6 grid gap-4 sm:grid-cols-2">
+        <section className="mt-6 grid items-start gap-3 md:grid-cols-2 md:gap-4">
           {workouts.map((workout) => {
             const workoutDone = isDone(workout);
 
             return (
               <article
                 key={workout.id}
-                className={`bg-surface rounded-2xl border p-4 transition-colors ${
+                className={`bg-surface rounded-2xl border p-3 transition-colors sm:p-4 ${
                   workoutDone ? "border-accent/45" : "border-line"
                 }`}
               >
@@ -234,35 +234,44 @@ export function Board({
                       <p className="text-muted mt-1 text-xs">{workout.day_label}</p>
                     )}
                   </div>
-                  <Check
-                    large
+                  <CheckButton
                     checked={workoutDone}
                     onToggle={() => void toggleWorkout(workout.id)}
                     label={`Marcar ${workout.title} inteiro`}
                   />
                 </div>
 
-                <ul className="divide-line-soft mt-3 divide-y">
+                <ul className="divide-line-soft mt-2 divide-y sm:mt-3">
                   {workout.exercises.map((exercise) => (
-                    <li key={exercise.id} className="flex items-center gap-3 py-2">
-                      <Check
-                        checked={exercise.done}
-                        onToggle={() => void toggleExercise(exercise.id, !exercise.done)}
-                        label={exercise.name}
-                      />
-                      <span
-                        className={`flex-1 text-sm leading-snug ${
-                          exercise.done ? "text-muted line-through" : "text-ink"
-                        }`}
+                    <li key={exercise.id} className="flex items-center gap-2">
+                      {/* O alvo de toque é a linha inteira, não só o quadradinho:
+                          na academia o dedo erra um quadrado de 28px. */}
+                      <button
+                        type="button"
+                        role="checkbox"
+                        aria-checked={exercise.done}
+                        onClick={() => void toggleExercise(exercise.id, !exercise.done)}
+                        className="active:bg-bg/40 flex min-h-12 min-w-0 flex-1 items-center gap-3 rounded-lg py-1.5 text-left transition-colors"
                       >
-                        {exercise.name}
-                      </span>
+                        <CheckBox checked={exercise.done} />
+                        <span
+                          className={`flex-1 text-sm leading-snug ${
+                            exercise.done ? "text-muted line-through" : "text-ink"
+                          }`}
+                        >
+                          {exercise.name}
+                        </span>
+                      </button>
                       <input
                         value={exercise.load_note}
                         onChange={(event) => changeLoad(exercise.id, event.target.value)}
                         placeholder={exercise.hint}
                         aria-label={`${exercise.name} (${exercise.hint})`}
-                        className="border-line bg-surface-2 text-ink placeholder:text-muted/50 focus:border-accent h-9 w-24 shrink-0 rounded-lg border px-2 text-center text-xs outline-none"
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                        spellCheck={false}
+                        enterKeyHint="done"
+                        className="border-line bg-surface-2 text-ink placeholder:text-muted focus:border-accent h-10 w-28 shrink-0 rounded-lg border px-2 text-center text-base placeholder:text-xs outline-none"
                       />
                     </li>
                   ))}
@@ -311,7 +320,7 @@ export function Board({
       {error && (
         <div
           role="alert"
-          className="border-danger/30 bg-danger/10 text-danger fixed inset-x-4 bottom-4 mx-auto flex max-w-sm items-center gap-3 rounded-xl border px-4 py-3 text-sm backdrop-blur"
+          className="border-danger/30 bg-danger/10 text-danger fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] mx-auto flex max-w-sm items-center gap-3 rounded-xl border px-4 py-3 text-sm backdrop-blur"
         >
           <span className="flex-1">{error}</span>
           <button

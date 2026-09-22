@@ -17,6 +17,23 @@ experimentos em schemas separados.
 - `Resetar semana` arquiva o estado atual em `week_history` (com snapshot em JSONB),
   zera os checks e incrementa o contador da semana.
 
+## Interface
+
+Paleta [Dracula](https://draculatheme.com/contribute#color-palette). Uma exceção:
+`--color-muted` é o Comment (`#6272a4`) clareado, porque o original rende 2.5:1
+sobre o card — abaixo do mínimo para texto. O Comment original ficou em
+`--color-faint`.
+
+Decisões pensadas para uso no celular dentro da academia:
+
+- O alvo de toque de um exercício é a linha inteira, não o quadrado de 28px.
+- Inputs têm `font-size: 16px` — abaixo disso o Safari do iOS dá zoom na página
+  a cada foco.
+- `env(safe-area-inset-*)` em cima e embaixo, porque o manifest declara
+  `display: standalone` e na tela de início não há barra do navegador protegendo.
+- Duas colunas só a partir de 768px: em 640px elas espremiam o nome do
+  exercício a ~96px, pior do que uma coluna.
+
 ## Rodando local
 
 ```bash
