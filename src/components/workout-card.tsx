@@ -1,26 +1,9 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+
 import { CheckBox, CheckButton } from "@/components/check";
 import type { WorkoutCard as WorkoutCardData } from "@/lib/database.types";
-
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      className={`text-muted h-4 w-4 shrink-0 transition-transform duration-200 ${
-        open ? "rotate-180" : ""
-      }`}
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  );
-}
 
 export function WorkoutCard({
   workout,
@@ -45,7 +28,7 @@ export function WorkoutCard({
   return (
     <article
       className={`bg-surface rounded-2xl border p-3 transition-colors sm:p-4 ${
-        complete ? "border-accent/45" : "border-line"
+        complete ? "border-accent/45" : open ? "border-line" : "border-line/60"
       }`}
     >
       <div className="flex items-center gap-2">
@@ -69,7 +52,12 @@ export function WorkoutCard({
           >
             {done}/{total}
           </span>
-          <Chevron open={open} />
+          <ChevronDown
+            aria-hidden
+            className={`text-muted h-4 w-4 shrink-0 transition-transform duration-200 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
         </button>
         <CheckButton
           checked={complete}

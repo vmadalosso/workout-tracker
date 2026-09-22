@@ -24,6 +24,9 @@ Paleta [Dracula](https://draculatheme.com/contribute#color-palette). Uma exceç�
 sobre o card — abaixo do mínimo para texto. O Comment original ficou em
 `--color-faint`.
 
+Ícones: [`lucide-react`](https://lucide.dev). Escolhido no lugar do Phosphor por
+ser mais leve; se quiser os pesos do Phosphor (thin/duotone), a troca é mecânica.
+
 Decisões pensadas para uso no celular dentro da academia:
 
 - O alvo de toque de um exercício é a linha inteira, não o quadrado de 28px.

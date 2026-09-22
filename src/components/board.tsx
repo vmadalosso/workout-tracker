@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CircleAlert, LogOut, RotateCcw, Trophy, X } from "lucide-react";
 
 import { WorkoutCard as WorkoutCardView } from "@/components/workout-card";
 import { createClient } from "@/lib/supabase/client";
@@ -182,16 +183,18 @@ export function Board({
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="text-muted hover:text-ink text-xs underline underline-offset-4"
+              className="border-line text-muted hover:text-ink hover:border-muted flex h-9 items-center gap-1.5 rounded-lg border px-3 text-xs transition-colors"
             >
-              sair
+              <LogOut aria-hidden className="h-3.5 w-3.5" />
+              Sair
             </button>
           </form>
         </div>
 
         <div className="mt-6">
           <div className="flex items-baseline justify-between text-sm">
-            <span className="text-muted">
+            <span className={`flex items-center gap-1.5 ${allDone ? "text-done" : "text-muted"}`}>
+              {allDone && <Trophy aria-hidden className="h-4 w-4" />}
               {allDone ? "Semana completa" : "Treinos concluídos"}
             </span>
             <span className="tabular text-ink font-semibold">
@@ -208,8 +211,8 @@ export function Board({
             aria-label="Treinos concluídos na semana"
           >
             <div
-              className={`h-full rounded-full transition-[width,background-color] duration-300 ${
-                allDone ? "bg-done" : "bg-accent"
+              className={`h-full rounded-full transition-[width,background-color,box-shadow] duration-300 ${
+                allDone ? "bg-done shadow-[0_0_12px_-1px_var(--color-done)]" : "bg-accent"
               }`}
               style={{ width: `${progress}%` }}
             />
@@ -265,8 +268,12 @@ export function Board({
             type="button"
             onClick={() => setConfirmingReset(true)}
             disabled={isResetting}
-            className="border-line text-muted hover:text-ink hover:border-muted h-11 rounded-xl border px-6 text-sm transition-colors disabled:opacity-60"
+            className="border-line text-muted hover:text-ink hover:border-muted flex h-11 items-center gap-2 rounded-xl border px-6 text-sm transition-colors disabled:opacity-60"
           >
+            <RotateCcw
+              aria-hidden
+              className={`h-4 w-4 ${isResetting ? "animate-spin [animation-direction:reverse]" : ""}`}
+            />
             {isResetting ? "Fechando semana..." : "Resetar semana"}
           </button>
         )}
@@ -277,13 +284,15 @@ export function Board({
           role="alert"
           className="border-danger/30 bg-danger/10 text-danger fixed inset-x-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] mx-auto flex max-w-sm items-center gap-3 rounded-xl border px-4 py-3 text-sm backdrop-blur"
         >
+          <CircleAlert aria-hidden className="h-4 w-4 shrink-0" />
           <span className="flex-1">{error}</span>
           <button
             type="button"
             onClick={() => setError(null)}
-            className="underline underline-offset-4"
+            aria-label="Fechar aviso"
+            className="hover:bg-danger/20 -m-1 grid h-7 w-7 shrink-0 place-items-center rounded-lg p-1 transition-colors"
           >
-            fechar
+            <X aria-hidden className="h-4 w-4" />
           </button>
         </div>
       )}

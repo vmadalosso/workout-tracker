@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { CircleAlert, LoaderCircle, Mail, MailCheck } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -36,6 +37,7 @@ export function LoginForm({ next }: { next: string }) {
   if (status === "sent") {
     return (
       <div className="border-line bg-surface rounded-2xl border p-6 text-center">
+        <MailCheck aria-hidden className="text-accent mx-auto mb-3 h-8 w-8" />
         <p className="text-ink text-base font-medium">Link enviado</p>
         <p className="text-muted mt-2 text-sm leading-relaxed">
           Abra o e-mail em <span className="text-ink">{email}</span> e clique no link para
@@ -71,12 +73,18 @@ export function LoginForm({ next }: { next: string }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="bg-accent text-accent-ink h-12 rounded-xl text-base font-semibold disabled:opacity-60"
+        className="bg-accent text-accent-ink flex h-12 items-center justify-center gap-2 rounded-xl text-base font-semibold transition-opacity disabled:opacity-60"
       >
+        {status === "sending" ? (
+          <LoaderCircle aria-hidden className="h-4 w-4 animate-spin" />
+        ) : (
+          <Mail aria-hidden className="h-4 w-4" />
+        )}
         {status === "sending" ? "Enviando..." : "Receber link de acesso"}
       </button>
       {status === "error" && (
-        <p className="text-danger text-sm" role="alert">
+        <p className="text-danger flex items-start gap-2 text-sm" role="alert">
+          <CircleAlert aria-hidden className="mt-0.5 h-4 w-4 shrink-0" />
           {message}
         </p>
       )}
